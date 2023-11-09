@@ -10,16 +10,11 @@ const ModalOverLay = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	padding: 6rem;
-
-	@media (max-width: 1024px) {
-		padding: 3rem;
-	}
 `;
 const ModalWindow = styled.div`
 	max-width: 1000px;
-	width: 100%;
-	height: auto;
+	width: 80%;
+	height: 90%;
 	overflow-y: auto;
 	background-color: #ffffff;
 	border-radius: 10px;
@@ -29,7 +24,6 @@ const ModalWindow = styled.div`
 
 const CloseButton = styled.button`
 	border: none;
-	/* background: transparent; */
 	background-color: #ffffff;
 	width: 40px;
 	height: 40px;
@@ -77,12 +71,13 @@ function Modal({ children, setActive }) {
 					setActive(false);
 				}}
 			>
+				
 				<ModalWindow onClick={(e) => e.stopPropagation()}>
-					<CloseButton
-						onClick={() => {
-							setActive(false);
-						}}
-					/>
+				<CloseButton
+					onClick={() => {
+						setActive(false);
+					}}
+				/>
 					{children}
 				</ModalWindow>
 			</ModalOverLay>

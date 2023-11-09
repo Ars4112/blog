@@ -52,6 +52,7 @@ function Header(props) {
 
 	window.onscroll = scrollHeader;
 
+
 	return (
 		<HeaderWrapper scroll={scrolling} scrollPos={scrollPos} ref={headerBlock}>
 			<Logo />
