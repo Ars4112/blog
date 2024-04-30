@@ -1,12 +1,14 @@
 import styled from "styled-components";
 
-const Item = styled.li`
+const Item = styled.button`
 	display: flex;
 	flex-direction: column;
 	align-items: start;
 	gap: 0.5rem;
-	
+	border: none;
+	background-color: transparent;
 	color: #929292;
+	cursor: pointer;
 
 	& img {
 		width: 100%;
@@ -43,7 +45,7 @@ const InnerWrapper = styled.div`
 	gap: 5px;
 `;
 
-function Post(props) {
+function LinkPost(props) {
 	return (
 		<Item>
 			<img src={props.item.img} alt="#" srcSet={props.item.img_2x} />
@@ -62,4 +64,4 @@ function Post(props) {
 	);
 }
 
-export default Post;
+export default LinkPost;

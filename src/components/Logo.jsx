@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
 import { HeaderContext } from "../App";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import logo from "../img/logo.svg";
 import search from "../img/search.svg";
 import menu from "../img/menu.svg";
@@ -11,10 +11,25 @@ const LogoWrapper = styled.div`
 	width: 100%;
 	display: flex;
 	justify-content: center;
-	padding: ${({ logoMenu }) =>
-		logoMenu ? "2rem 4rem 2rem 1rem" : "2rem 4rem"};
+	padding: 2rem 4rem;
 	position: relative;
-	${({ logoMenu }) => logoMenu && `border-bottom: 1px solid #E9E9E9`}
+	${({ logoMenu }) =>
+		logoMenu &&
+		css`
+			padding: 0;
+			width: 0;
+			& :nth-child(1) {
+				display: none;
+			}
+			@media (max-width: 1024px) {
+				border-bottom: 1px solid #e9e9e9;
+				padding: 2rem 4rem 2rem 1rem;
+				width: 100%;
+				& :nth-child(1) {
+					display: block;
+				}
+			}
+		`};
 `;
 
 const ButtonMenu = styled.button`
@@ -27,13 +42,13 @@ const ButtonMenu = styled.button`
 		display: block;
 		position: absolute;
 		top: 50%;
-		right: 0;
 		transform: translateY(-50%);
 		left: 0;
 	}
 `;
 
 const Button = styled.button`
+	display: block;
 	position: absolute;
 	top: 50%;
 	right: 0;
@@ -42,10 +57,12 @@ const Button = styled.button`
 	background-color: transparent;
 	padding: 1rem;
 	cursor: pointer;
+`;
 
+const ButtonCloseMenu = styled(Button)`
+	display: none;
 	@media (max-width: 1024px) {
 		display: block;
-		right: 0;
 	}
 `;
 
@@ -62,16 +79,16 @@ const InputSearch = styled.input`
 
 	${({ isSearchOpen }) =>
 		!isSearchOpen &&
-		`
-		position: absolute;
-	width: 1px;
-	height: 1px;
-	margin: -1px;
-	padding: 0;
-	overflow: hidden;
-	border: 0;
-	transition: width 0.5s;
-`}
+		css`
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			margin: -1px;
+			padding: 0;
+			overflow: hidden;
+			border: 0;
+			transition: width 0.5s;
+		`}
 `;
 
 function Logo(props) {
@@ -83,8 +100,6 @@ function Logo(props) {
 	useEffect(() => {
 		!navMenu.menuIsOpen && setWidthButton(widthButtonRef.current.offsetWidth);
 	}, [widthButton]);
-
-	console.log(props.logoMenu);
 	return (
 		<LogoWrapper logoMenu={props.logoMenu}>
 			{!props.logoMenu && (
@@ -112,9 +127,12 @@ function Logo(props) {
 					<img src={search} alt="Поиск" />
 				</Button>
 			) : (
-				<Button right={true} onClick={() => navMenu.setMenuIsOpen(false)}>
+				<ButtonCloseMenu
+					right={true}
+					onClick={() => navMenu.setMenuIsOpen(false)}
+				>
 					<img src={close} alt="Закрыть" />
-				</Button>
+				</ButtonCloseMenu>
 			)}
 
 			<InputSearch widthButton={widthButton} isSearchOpen={isSearchOpen} />

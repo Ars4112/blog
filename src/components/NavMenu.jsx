@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { HeaderContext } from "../App";
 import Logo from "./Logo";
 import styled from "styled-components";
@@ -20,8 +20,7 @@ const Nav = styled.nav`
 		height: 100vh;
 		position: absolute;
 		top: 0;
-		left: ${({ menuIsOpen, navWidth }) =>
-			menuIsOpen ? "0" : `-${navWidth + 1000}px`};
+		left: ${({ menuIsOpen }) => (menuIsOpen ? "0" : `-100%`)};
 		background-color: #ffffff;
 		z-index: 1;
 		border-right: 1px solid #e9e9e9;
@@ -56,13 +55,23 @@ const NavList = styled.ul`
 `;
 
 const NavItem = styled.li`
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
+	
 	max-width: 150px;
 	position: relative;
-	padding: 1rem 0;
-	cursor: pointer;
+	
+	
+
+	& > button {
+		border: none;
+		background-color: transparent;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		width: 100%;
+		padding: 1rem 0;
+		cursor: pointer;
+	}
 
 	& + span {
 		font-size: 0.8125rem;
@@ -81,13 +90,12 @@ const NavItem = styled.li`
 		position: absolute;
 		top: 50px;
 		left: 0;
-		width: auto;
-		height: auto;
 		margin: 0;
 		padding: 10px 20px;
 		background-color: #ffffff;
 		border: 1px solid #e9e9e9;
-		transition: all 0.5s;
+		opacity: 1;
+		transition: opacity 0.3s;
 		z-index: 1;
 	}
 
@@ -103,12 +111,8 @@ const NavItem = styled.li`
 
 const SubMenuList = styled.ul`
 	position: absolute;
-	width: 1px;
-	height: 1px;
-	margin: -1px;
-	padding: 0;
-	overflow: hidden;
-	border: 0;
+	top: -1000%;
+	opacity: 0;
 `;
 
 const SubMenuItem = styled.li`
@@ -133,36 +137,33 @@ const SubMenuItem = styled.li`
 `;
 
 const OverLay = styled.div`
-	position: absolute;
-	top: 0;
-	left: 0;
-
-	width: 100vw;
-	height: 100vh;
-	background-color: #ffffff;
-	opacity: 0.6;
+	@media (max-width: 1024px) {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background-color: #ffffff;
+		opacity: 0.6;
+	}
 `;
 
 function NavMenu(props) {
-	const navBlock = useRef();
-	const [navWidth, setNavWidth] = useState(0);
-	useEffect(() => {
-		setNavWidth(navBlock.current.offsetWidth);
-	}, [navWidth]);
-
 	const menu = useContext(HeaderContext);
 
 	return (
 		<>
-			<Nav ref={navBlock} navWidth={navWidth} menuIsOpen={menu.menuIsOpen}>
+			<Nav menuIsOpen={menu.menuIsOpen}>
 				{menu.menuIsOpen && <Logo logoMenu={true} />}
 
 				<NavList>
 					{menuItems.map((i) => {
 						return (
 							<NavItem key={i.id}>
-								<span>{i.item}</span>
-								{i.arrow && <img src={arrow} alt="#" />}
+								<button>
+									<span>{i.item}</span>
+									{i.arrow && <img src={arrow} alt="#" />}
+								</button>
 								{i.arrow && (
 									<SubMenuList>
 										{i.subMenu.map((j, index) => {

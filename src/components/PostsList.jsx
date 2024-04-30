@@ -1,4 +1,4 @@
-import Post from "./Post";
+import LinkPost from "./Post";
 import Modal from "./Modal";
 
 import styled from "styled-components";
@@ -23,9 +23,7 @@ const List = styled.ul`
 	align-items: stretch;
 `;
 
-const LinkPost = styled.button`
-	border: none;
-	background: transparent;
+const PostItem = styled.li`
 	padding: 0;
 	display: flex;
 	flex: 0 0 calc(33% - 25px);
@@ -46,9 +44,9 @@ function PostsList(props) {
 				{props.postsList &&
 					props.postsList.map((i, index) => {
 						return (
-							<LinkPost key={index} onClick={() => props.setModal(i)}>
-								<Post item={{ ...i }} />
-							</LinkPost>
+							<PostItem key={index} onClick={() => props.setModal(i)}>
+								<LinkPost item={{ ...i }} />
+							</PostItem>
 						);
 					})}
 			</List>
@@ -57,7 +55,7 @@ function PostsList(props) {
 					setActive={props.setActive}
 				
 				>
-					<Post item={props.post} />
+					<LinkPost item={props.post} />
 				</Modal>
 			)}
 		</PostsListWrapper>

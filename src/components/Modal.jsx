@@ -14,7 +14,8 @@ const ModalOverLay = styled.div`
 const ModalWindow = styled.div`
 	max-width: 1000px;
 	width: 80%;
-	height: 90%;
+	max-height: 90vh;
+
 	overflow-y: auto;
 	background-color: #ffffff;
 	border-radius: 10px;

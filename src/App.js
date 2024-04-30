@@ -31,7 +31,7 @@ function App() {
 			.then((res) => res.json())
 			.then((json) => setPostsList(json));
 	}, []);
-
+console.log(postsList);
 	return (
 		<>
 			<AppInnerContainer>
