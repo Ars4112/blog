@@ -19,6 +19,7 @@ function App() {
 	const [postsList, setPostsList] = useState([]);
 	const [modalActive, setModalActive] = useState(false);
 	const [menuIsOpen, setMenuIsOpen] = useState(false);
+	const [subMenuIsOpen, setSubMenuIsOpen] = useState(false);
 	const [post, setPost] = useState();
 
 	const setModal = (i) => {
@@ -31,12 +32,12 @@ function App() {
 			.then((res) => res.json())
 			.then((json) => setPostsList(json));
 	}, []);
-console.log(postsList);
+
 	return (
 		<>
 			<AppInnerContainer>
 				<HeaderContext.Provider
-					value={{ setMenuIsOpen, menuIsOpen: menuIsOpen }}
+					value={{ setMenuIsOpen, menuIsOpen, subMenuIsOpen,  setSubMenuIsOpen}}
 				>
 					<Header />
 				</HeaderContext.Provider>

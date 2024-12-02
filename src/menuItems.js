@@ -63,6 +63,7 @@ const menuItems = [
 		item: "Buy Now",
 		arrow: false,
 		id: 6,
+		subMenu: null,
 	},
 ];
 

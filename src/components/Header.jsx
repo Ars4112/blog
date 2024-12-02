@@ -1,4 +1,5 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
+import { HeaderContext } from "../App";
 import styled from "styled-components";
 import NavMenu from "./NavMenu";
 import Logo from "./Logo";
@@ -20,6 +21,7 @@ const HeaderWrapper = styled.header`
 `;
 
 function Header(props) {
+	const { setSubMenuIsOpen } = useContext(HeaderContext);
 	const headerBlock = useRef();
 
 	const [heightElem, setheightElem] = useState(0);
@@ -44,6 +46,7 @@ function Header(props) {
 			if (currentScrollpos > 200) {
 				setScrolling(true);
 				setScrollPos(200);
+				setSubMenuIsOpen(false);
 			} else {
 				setScrolling(false);
 			}
@@ -51,7 +54,6 @@ function Header(props) {
 	};
 
 	window.onscroll = scrollHeader;
-
 
 	return (
 		<HeaderWrapper scroll={scrolling} scrollPos={scrollPos} ref={headerBlock}>

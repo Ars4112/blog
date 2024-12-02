@@ -92,45 +92,35 @@ const InputSearch = styled.input`
 `;
 
 function Logo(props) {
-	const navMenu = useContext(HeaderContext);
+	const { setMenuIsOpen, menuIsOpen } = useContext(HeaderContext);
 	const widthButtonRef = useRef();
 	const [widthButton, setWidthButton] = useState(0);
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-	useEffect(() => {
-		!navMenu.menuIsOpen && setWidthButton(widthButtonRef.current.offsetWidth);
-	}, [widthButton]);
 	return (
 		<LogoWrapper logoMenu={props.logoMenu}>
 			{!props.logoMenu && (
-				<ButtonMenu onClick={() => navMenu.setMenuIsOpen(true)}>
+				<ButtonMenu
+					onClick={() => {
+						setMenuIsOpen(true);
+					}}
+				>
 					<img src={menu} alt="#" />
 				</ButtonMenu>
 			)}
 
 			<img src={logo} alt="Logotype" />
 
-			{!navMenu.menuIsOpen ? (
-				<Button
-					right={true}
-					ref={widthButtonRef}
-					onClick={() => setIsSearchOpen(!isSearchOpen)}
-				>
+			{!menuIsOpen ? (
+				<Button right={true} ref={widthButtonRef} onClick={() => setIsSearchOpen(!isSearchOpen)}>
 					<img src={search} alt="Поиск" />
 				</Button>
 			) : !props.logoMenu ? (
-				<Button
-					right={true}
-					ref={widthButtonRef}
-					onClick={() => setIsSearchOpen(!isSearchOpen)}
-				>
+				<Button right={true} ref={widthButtonRef} onClick={() => setIsSearchOpen(!isSearchOpen)}>
 					<img src={search} alt="Поиск" />
 				</Button>
 			) : (
-				<ButtonCloseMenu
-					right={true}
-					onClick={() => navMenu.setMenuIsOpen(false)}
-				>
+				<ButtonCloseMenu right={true} onClick={() => setMenuIsOpen(false)}>
 					<img src={close} alt="Закрыть" />
 				</ButtonCloseMenu>
 			)}

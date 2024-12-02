@@ -1,9 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { HeaderContext } from "../App";
 import Logo from "./Logo";
 import styled from "styled-components";
 import arrow from "../img/arrow.svg";
-
 import menuItems from "../menuItems";
 
 const Nav = styled.nav`
@@ -26,9 +25,6 @@ const Nav = styled.nav`
 		border-right: 1px solid #e9e9e9;
 		transition: left 0.5s;
 	}
-
-	@media (max-width: 768px) {
-	}
 `;
 
 const NavList = styled.ul`
@@ -38,8 +34,8 @@ const NavList = styled.ul`
 	display: flex;
 	gap: 1rem;
 	flex-wrap: wrap;
-	justify-content: start;
-	align-items: center;
+	justify-content: center;
+	align-items: start;
 	max-width: 1160px;
 
 	& + li {
@@ -55,11 +51,7 @@ const NavList = styled.ul`
 `;
 
 const NavItem = styled.li`
-	
 	max-width: 150px;
-	position: relative;
-	
-	
 
 	& > button {
 		border: none;
@@ -80,25 +72,6 @@ const NavItem = styled.li`
 		line-height: 0.8125rem;
 	}
 
-	&:hover img {
-		margin-top: 5px;
-		transition: margin-top 0.2s;
-	}
-
-	&:hover ul {
-		list-style: none;
-		position: absolute;
-		top: 50px;
-		left: 0;
-		margin: 0;
-		padding: 10px 20px;
-		background-color: #ffffff;
-		border: 1px solid #e9e9e9;
-		opacity: 1;
-		transition: opacity 0.3s;
-		z-index: 1;
-	}
-
 	@media (max-width: 1024px) {
 		border-bottom: 1px solid #e9e9e9;
 		text-align: start;
@@ -109,22 +82,45 @@ const NavItem = styled.li`
 	}
 `;
 
+const Img = styled.img`
+	margin-top: ${({ subMenuIsOpen }) => (subMenuIsOpen ? "5px" : "0")};
+	transition: margin-top 0.2s;
+`;
+
 const SubMenuList = styled.ul`
+	padding: 0;
+	min-width: 176px;
 	position: absolute;
-	top: -1000%;
-	opacity: 0;
+	top: ${({ position, subMenuIsOpen }) => (subMenuIsOpen && !!position ? `${position.top}px` : "-1000px")};
+	left: ${({ position, subMenuIsOpen }) => (subMenuIsOpen && !!position ? `${position.left}px` : "0")};
+	transform: translate(-10%, 27%);
+	background-color: #ffffff;
+	opacity: ${({ subMenuIsOpen }) => (subMenuIsOpen ? "1" : "0")};
+	transition: opacity 0.6s;
+
+	@media (max-width: 1024px) {
+		position: relative;
+		top: 0;
+		left: ${({ subMenuIsOpen }) => (subMenuIsOpen ? "0" : "-100%")};
+		opacity: 1;
+		height: ${({ subMenuIsOpen, heightList }) => (subMenuIsOpen ? `${heightList}px` : "0")};
+		transform: translate(0, 0);
+		overflow: hidden;
+		transition: ${({ subMenuIsOpen }) => (subMenuIsOpen ? "height 1s" : "height 1s, left 0s 1s")};
+	}
 `;
 
 const SubMenuItem = styled.li`
-	min-width: 176px;
 	width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	border-bottom: 1px solid #e9e9e9;
-	border-bottom: ${({ border }) => (border ? "none" : "1px solid #E9E9E9")};
 	margin: 0;
-	padding: 8px 0;
+	padding: 8px;
+
+	&:not(:first-child) {
+		border-top: 1px solid #e9e9e9;
+	}
 
 	&:hover span {
 		opacity: 0.5;
@@ -149,41 +145,98 @@ const OverLay = styled.div`
 `;
 
 function NavMenu(props) {
-	const menu = useContext(HeaderContext);
+	const { menuIsOpen, setMenuIsOpen, subMenuIsOpen, setSubMenuIsOpen } = useContext(HeaderContext);
 
+	const [position, setPosition] = useState(null);
+	const [heightSubMenuItem, setHeightSubMenuItem] = useState(null);
+	const navListElement = useRef(null);
+	const currentButtonId = useRef(null);
+	const subMenuItemElement = useRef(null);
+
+	const clickOutSideHandler = (e) => {
+		if (subMenuIsOpen && !!navListElement.current && !navListElement.current.contains(e.target)) {
+			setPosition(null);
+			setSubMenuIsOpen(false);
+		}
+	};
+
+	useEffect(() => {
+		document.addEventListener("click", clickOutSideHandler);
+		setHeightSubMenuItem(subMenuItemElement.current.offsetHeight);
+		return () => document.removeEventListener("click", clickOutSideHandler);
+	}, [subMenuIsOpen]);
+
+	const openSubMenuHandler = (e, id) => {
+		if (currentButtonId.current === id) {
+			setSubMenuIsOpen(!subMenuIsOpen);
+		} else {
+			setSubMenuIsOpen(true);
+
+			currentButtonId.current = id;
+		}
+		const positionEement = e.currentTarget.getBoundingClientRect();
+
+		setPosition({
+			top: positionEement.top,
+			left: positionEement.left,
+		});
+	};
+
+	const openSubMenuKeyPress = (e, id) => {
+		if (e.key === "Enter") {
+			e.preventDefault();
+			openSubMenuHandler(e, id);
+		}
+	};
+
+	const subMenuBlurHandler = (e) => {
+		if (currentButtonId.current) {
+			if (+e.currentTarget.id !== currentButtonId.current) setSubMenuIsOpen(false);
+		}
+	};
 	return (
 		<>
-			<Nav menuIsOpen={menu.menuIsOpen}>
-				{menu.menuIsOpen && <Logo logoMenu={true} />}
+			<Nav menuIsOpen={menuIsOpen}>
+				{menuIsOpen && <Logo logoMenu={true} />}
 
-				<NavList>
+				<NavList ref={navListElement}>
 					{menuItems.map((i) => {
 						return (
-							<NavItem key={i.id}>
-								<button>
+							<NavItem key={i.id} id={i.id} subMenuIsOpen={subMenuIsOpen}>
+								<button
+									id={i.id}
+									onClick={(e) => openSubMenuHandler(e, i.id)}
+									onKeyDown={(e) => openSubMenuKeyPress(e, i.id)}
+									onFocus={subMenuBlurHandler}
+								>
 									<span>{i.item}</span>
-									{i.arrow && <img src={arrow} alt="#" />}
+									{i.arrow && (
+										<Img src={arrow} alt="#" subMenuIsOpen={i.id === currentButtonId.current ? subMenuIsOpen : null} />
+									)}
 								</button>
-								{i.arrow && (
-									<SubMenuList>
-										{i.subMenu.map((j, index) => {
-											return (
-												<SubMenuItem
-													key={index}
-													border={i.subMenu.length - 1 === index ? true : false}
-												>
-													<span>{j}</span>
-												</SubMenuItem>
-											);
-										})}
-									</SubMenuList>
-								)}
+								<SubMenuList
+									position={position}
+									subMenuIsOpen={i.id === currentButtonId.current ? subMenuIsOpen : null}
+									heightList={i.subMenu ? heightSubMenuItem * i.subMenu.length : null}
+								>
+									{i.subMenu?.map((j, index) => {
+										return (
+											<SubMenuItem
+												ref={subMenuItemElement}
+												key={index}
+												tabIndex={i.id === currentButtonId.current && subMenuIsOpen ? 0 : -1}
+											>
+												<span>{j}</span>
+											</SubMenuItem>
+										);
+									})}
+								</SubMenuList>
 							</NavItem>
 						);
 					})}
 				</NavList>
 			</Nav>
-			{menu.menuIsOpen && <OverLay onClick={() => menu.setMenuIsOpen(false)} />}
+			{menuIsOpen && <OverLay onClick={() => setMenuIsOpen(false)} />}
 		</>
 	);
 }
