@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Item = styled.button`
+const Item = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: start;
@@ -8,7 +8,6 @@ const Item = styled.button`
 	border: none;
 	background-color: transparent;
 	color: #929292;
-	cursor: pointer;
 
 	& img {
 		width: 100%;
@@ -59,7 +58,6 @@ function LinkPost(props) {
 				<span>{props.item.views}</span>
 			</InnerWrapper>
 			<p>{props.item.text}</p>
-			
 		</Item>
 	);
 }

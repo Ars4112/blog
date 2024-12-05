@@ -21,7 +21,8 @@ body {
   color: #000;
   width: 100%;
   height: 100%;
-  
+  overflow-y: ${({ modalActive}) => (modalActive ? "hidden" : "auto")};
+
     @media (max-width: 1024px) {
       overflow-y: ${({ modalActive, menuIsOpen }) => (modalActive || menuIsOpen ? "hidden" : "auto")};
 	}

@@ -52,7 +52,7 @@ const NavList = styled.ul`
 
 const NavItem = styled.li`
 	max-width: 150px;
-
+	position: relative;
 	& > button {
 		border: none;
 		background-color: transparent;
@@ -91,8 +91,8 @@ const SubMenuList = styled.ul`
 	padding: 0;
 	min-width: 176px;
 	position: absolute;
-	top: ${({ position, subMenuIsOpen }) => (subMenuIsOpen && !!position ? `${position.top}px` : "-1000px")};
-	left: ${({ position, subMenuIsOpen }) => (subMenuIsOpen && !!position ? `${position.left}px` : "0")};
+	top: ${({ position, subMenuIsOpen }) => (subMenuIsOpen ? "0" : "-1000px")};
+	left: ${({ position, subMenuIsOpen }) => (subMenuIsOpen ? "0" : "0")};
 	transform: translate(-10%, 27%);
 	background-color: #ffffff;
 	opacity: ${({ subMenuIsOpen }) => (subMenuIsOpen ? "1" : "0")};
@@ -145,9 +145,9 @@ const OverLay = styled.div`
 `;
 
 function NavMenu(props) {
-	const { menuIsOpen, setMenuIsOpen, subMenuIsOpen, setSubMenuIsOpen } = useContext(HeaderContext);
+	const { menuIsOpen, setMenuIsOpen, subMenuIsOpen, setSubMenuIsOpen, modalActive } = useContext(HeaderContext);
 
-	const [position, setPosition] = useState(null);
+	
 	const [heightSubMenuItem, setHeightSubMenuItem] = useState(null);
 	const navListElement = useRef(null);
 	const currentButtonId = useRef(null);
@@ -155,7 +155,6 @@ function NavMenu(props) {
 
 	const clickOutSideHandler = (e) => {
 		if (subMenuIsOpen && !!navListElement.current && !navListElement.current.contains(e.target)) {
-			setPosition(null);
 			setSubMenuIsOpen(false);
 		}
 	};
@@ -174,12 +173,6 @@ function NavMenu(props) {
 
 			currentButtonId.current = id;
 		}
-		const positionEement = e.currentTarget.getBoundingClientRect();
-
-		setPosition({
-			top: positionEement.top,
-			left: positionEement.left,
-		});
 	};
 
 	const openSubMenuKeyPress = (e, id) => {
@@ -204,6 +197,7 @@ function NavMenu(props) {
 						return (
 							<NavItem key={i.id} id={i.id} subMenuIsOpen={subMenuIsOpen}>
 								<button
+								tabIndex={modalActive ? -1 : 0}
 									id={i.id}
 									onClick={(e) => openSubMenuHandler(e, i.id)}
 									onKeyDown={(e) => openSubMenuKeyPress(e, i.id)}
@@ -215,7 +209,7 @@ function NavMenu(props) {
 									)}
 								</button>
 								<SubMenuList
-									position={position}
+									// position={position}
 									subMenuIsOpen={i.id === currentButtonId.current ? subMenuIsOpen : null}
 									heightList={i.subMenu ? heightSubMenuItem * i.subMenu.length : null}
 								>

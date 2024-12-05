@@ -1,36 +1,40 @@
 import styled from "styled-components";
+import { useContext } from "react";
+import { PostContext } from "../App";
+import LinkPost from "./Post";
+import { useParams,  useNavigate } from "react-router-dom";
 
 const ModalOverLay = styled.div`
-	width: 100vw;
-	height: 100vh;
+	width: 100%;
+	height: 100%;
 	background: rgba(0000, 0000, 0000, 0.5);
 	position: fixed;
 	top: 0;
 	left: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 `;
 const ModalWindow = styled.div`
 	max-width: 1000px;
 	width: 80%;
-	max-height: 90vh;
-
-	overflow-y: auto;
+	max-height: 90%;
 	background-color: #ffffff;
-	border-radius: 10px;
+	border-radius: 0.625rem;
 	padding: 2rem;
-	position: relative;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 2;
 `;
 
 const CloseButton = styled.button`
 	border: none;
+	border-radius: 0.3rem;
 	background-color: #ffffff;
-	width: 40px;
-	height: 40px;
+	width: 1.5rem;
+	height: 1.5rem;
 	position: absolute;
-	top: -40px;
-	right: -40px;
+	top: -2.125rem;
+	right: 0;
 	opacity: 0.5;
 
 	cursor: pointer;
@@ -64,24 +68,24 @@ const CloseButton = styled.button`
 	}
 `;
 
-function Modal({ children, setActive }) {
+function Modal() {
+	const { postsList } = useContext(PostContext);
+	const { id } = useParams();
+	const navigate = useNavigate()
+
+	const post = postsList?.find((i) => i.id === Number(id));
+
 	return (
 		<>
-			<ModalOverLay
-				onClick={() => {
-					setActive(false);
-				}}
-			>
-				
-				<ModalWindow onClick={(e) => e.stopPropagation()}>
-				<CloseButton
-					onClick={() => {
-						setActive(false);
-					}}
-				/>
-					{children}
-				</ModalWindow>
-			</ModalOverLay>
+			{postsList.length && (
+				<>
+					<ModalWindow>
+						<CloseButton onClick={()=> navigate("/")}/>
+						<LinkPost item={post} />
+					</ModalWindow>
+					<ModalOverLay onClick={()=> navigate("/")}/>
+				</>
+			)}
 		</>
 	);
 }

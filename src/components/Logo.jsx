@@ -92,7 +92,7 @@ const InputSearch = styled.input`
 `;
 
 function Logo(props) {
-	const { setMenuIsOpen, menuIsOpen } = useContext(HeaderContext);
+	const { setMenuIsOpen, menuIsOpen, modalActive } = useContext(HeaderContext);
 	const widthButtonRef = useRef();
 	const [widthButton, setWidthButton] = useState(0);
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -100,23 +100,20 @@ function Logo(props) {
 	return (
 		<LogoWrapper logoMenu={props.logoMenu}>
 			{!props.logoMenu && (
-				<ButtonMenu
-					onClick={() => {
-						setMenuIsOpen(true);
-					}}
-				>
+				<ButtonMenu onClick={() => setMenuIsOpen(true)} tabIndex={menuIsOpen || modalActive ? -1 : 0}>
 					<img src={menu} alt="#" />
 				</ButtonMenu>
 			)}
 
 			<img src={logo} alt="Logotype" />
 
-			{!menuIsOpen ? (
-				<Button right={true} ref={widthButtonRef} onClick={() => setIsSearchOpen(!isSearchOpen)}>
-					<img src={search} alt="Поиск" />
-				</Button>
-			) : !props.logoMenu ? (
-				<Button right={true} ref={widthButtonRef} onClick={() => setIsSearchOpen(!isSearchOpen)}>
+			{!menuIsOpen || !props.logoMenu ? (
+				<Button
+					right={true}
+					ref={widthButtonRef}
+					onClick={() => setIsSearchOpen(!isSearchOpen)}
+					tabIndex={menuIsOpen || modalActive ? -1 : 0}
+				>
 					<img src={search} alt="Поиск" />
 				</Button>
 			) : (
@@ -125,7 +122,11 @@ function Logo(props) {
 				</ButtonCloseMenu>
 			)}
 
-			<InputSearch widthButton={widthButton} isSearchOpen={isSearchOpen} />
+			<InputSearch
+				widthButton={widthButton}
+				isSearchOpen={isSearchOpen}
+				tabIndex={menuIsOpen || modalActive ? -1 : 0}
+			/>
 		</LogoWrapper>
 	);
 }

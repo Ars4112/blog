@@ -1,6 +1,7 @@
+import { useContext } from "react";
+import { PostContext } from "../App";
 import LinkPost from "./Post";
-import Modal from "./Modal";
-
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const PostsListWrapper = styled.div`
@@ -13,18 +14,18 @@ const PostsListWrapper = styled.div`
 const List = styled.ul`
 	list-style: none;
 	margin: 0;
-	margin-top: 3rem;
+	margin-top: 2.5rem;
 	padding: 0;
 	display: flex;
 	flex-wrap: wrap;
-	gap: 40px;
+	gap: 1.5rem;
 	flex: 1 0 100%;
 	flex-direction: row;
 	align-items: stretch;
 `;
 
 const PostItem = styled.li`
-	padding: 0;
+	padding: 0.625rem;
 	display: flex;
 	flex: 0 0 calc(33% - 25px);
 
@@ -37,27 +38,23 @@ const PostItem = styled.li`
 	}
 `;
 
-function PostsList(props) {
+function PostsList() {
+	const { postsList, setSearchParams, modalActive, menuIsOpen } = useContext(PostContext);
+
 	return (
 		<PostsListWrapper>
 			<List>
-				{props.postsList &&
-					props.postsList.map((i, index) => {
+				{postsList &&
+					postsList.map((i, index) => {
 						return (
-							<PostItem key={index} onClick={() => props.setModal(i)}>
-								<LinkPost item={{ ...i }} />
+							<PostItem key={index} onClick={() => setSearchParams({ modalActive: true })}>
+								<Link to={`/post/${i.id}`} tabIndex={modalActive || menuIsOpen ? -1 : 0}>
+									<LinkPost item={{ ...i }} />
+								</Link>
 							</PostItem>
 						);
 					})}
 			</List>
-			{props.modalActive && (
-				<Modal
-					setActive={props.setActive}
-				
-				>
-					<LinkPost item={props.post} />
-				</Modal>
-			)}
 		</PostsListWrapper>
 	);
 }
