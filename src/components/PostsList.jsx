@@ -1,7 +1,7 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { PostContext } from "../App";
 import LinkPost from "./Post";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 
 const PostsListWrapper = styled.div`
@@ -39,13 +39,20 @@ const PostItem = styled.li`
 `;
 
 function PostsList() {
-	const { postsList, setSearchParams, modalActive, menuIsOpen } = useContext(PostContext);
+	const { searchResult, modalActive, setModalActive, menuIsOpen } = useContext(PostContext);
+
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	useEffect(() => {
+		const params = searchParams.get("modalActive");
+		setModalActive(params);
+	}, [searchParams]);
 
 	return (
 		<PostsListWrapper>
 			<List>
-				{postsList &&
-					postsList.map((i, index) => {
+				{searchResult &&
+					searchResult.map((i, index) => {
 						return (
 							<PostItem key={index} onClick={() => setSearchParams({ modalActive: true })}>
 								<Link to={`/post/${i.id}`} tabIndex={modalActive || menuIsOpen ? -1 : 0}>

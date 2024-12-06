@@ -69,15 +69,15 @@ const CloseButton = styled.button`
 `;
 
 function Modal() {
-	const { postsList } = useContext(PostContext);
+	const { searchResult } = useContext(PostContext);
 	const { id } = useParams();
 	const navigate = useNavigate()
 
-	const post = postsList?.find((i) => i.id === Number(id));
+	const post = searchResult?.find((i) => i.id === Number(id));
 
 	return (
 		<>
-			{postsList.length && (
+			{searchResult.length && (
 				<>
 					<ModalWindow>
 						<CloseButton onClick={()=> navigate("/")}/>

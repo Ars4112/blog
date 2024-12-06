@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { HeaderContext } from "../App";
 import styled, { css } from "styled-components";
 import logo from "../img/logo.svg";
@@ -73,11 +73,11 @@ const InputSearch = styled.input`
 	height: 20px;
 	top: 50%;
 	transform: translateY(-50%);
-	right: ${({ widthButton }) => `${widthButton}px`};
+	right: 0;
 	margin: 0;
 	transition: width 0.5s;
 
-	${({ isSearchOpen }) =>
+	/* ${({ isSearchOpen }) =>
 		!isSearchOpen &&
 		css`
 			position: absolute;
@@ -88,13 +88,12 @@ const InputSearch = styled.input`
 			overflow: hidden;
 			border: 0;
 			transition: width 0.5s;
-		`}
+		`} */
 `;
 
 function Logo(props) {
-	const { setMenuIsOpen, menuIsOpen, modalActive } = useContext(HeaderContext);
-	const widthButtonRef = useRef();
-	const [widthButton, setWidthButton] = useState(0);
+	const { setMenuIsOpen, menuIsOpen, modalActive, searchInputValue, changeSearchHandler } = useContext(HeaderContext);
+
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 
 	return (
@@ -110,7 +109,6 @@ function Logo(props) {
 			{!menuIsOpen || !props.logoMenu ? (
 				<Button
 					right={true}
-					ref={widthButtonRef}
 					onClick={() => setIsSearchOpen(!isSearchOpen)}
 					tabIndex={menuIsOpen || modalActive ? -1 : 0}
 				>
@@ -123,9 +121,10 @@ function Logo(props) {
 			)}
 
 			<InputSearch
-				widthButton={widthButton}
 				isSearchOpen={isSearchOpen}
 				tabIndex={menuIsOpen || modalActive ? -1 : 0}
+				onChange={(e) => changeSearchHandler(e)}
+				value={searchInputValue}
 			/>
 		</LogoWrapper>
 	);

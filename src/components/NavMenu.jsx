@@ -91,8 +91,8 @@ const SubMenuList = styled.ul`
 	padding: 0;
 	min-width: 176px;
 	position: absolute;
-	top: ${({ position, subMenuIsOpen }) => (subMenuIsOpen ? "0" : "-1000px")};
-	left: ${({ position, subMenuIsOpen }) => (subMenuIsOpen ? "0" : "0")};
+	top: ${({ subMenuIsOpen }) => (subMenuIsOpen ? "0" : "-1000px")};
+	left: ${({ subMenuIsOpen }) => (subMenuIsOpen ? "0" : "0")};
 	transform: translate(-10%, 27%);
 	background-color: #ffffff;
 	opacity: ${({ subMenuIsOpen }) => (subMenuIsOpen ? "1" : "0")};
@@ -209,7 +209,6 @@ function NavMenu(props) {
 									)}
 								</button>
 								<SubMenuList
-									// position={position}
 									subMenuIsOpen={i.id === currentButtonId.current ? subMenuIsOpen : null}
 									heightList={i.subMenu ? heightSubMenuItem * i.subMenu.length : null}
 								>
