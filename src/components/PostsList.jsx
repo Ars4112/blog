@@ -29,6 +29,10 @@ const PostItem = styled.li`
 	display: flex;
 	flex: 0 0 calc(33% - 25px);
 
+	& a {
+		text-decoration: none;
+	}
+
 	@media (max-width: 1024px) {
 		flex: 0 0 calc(50% - 20px);
 	}
