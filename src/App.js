@@ -38,7 +38,7 @@ function App() {
 	const changeSearchHandler = (e) => {
 		setSearchInputValue(e.target.value);
 
-		if (e.target.value === "") {
+		if (!e.target.value) {
 			setSearchResult(postsList);
 			return;
 		}
@@ -60,6 +60,7 @@ function App() {
 						setSubMenuIsOpen,
 						modalActive,
 						searchInputValue,
+						setSearchInputValue,
 						changeSearchHandler,
 					}}
 				>

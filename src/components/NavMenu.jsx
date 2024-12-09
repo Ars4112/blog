@@ -197,7 +197,7 @@ function NavMenu(props) {
 						return (
 							<NavItem key={i.id} id={i.id} subMenuIsOpen={subMenuIsOpen}>
 								<button
-								tabIndex={modalActive ? -1 : 0}
+								tabIndex={modalActive || menuIsOpen ? -1 : 0}
 									id={i.id}
 									onClick={(e) => openSubMenuHandler(e, i.id)}
 									onKeyDown={(e) => openSubMenuKeyPress(e, i.id)}

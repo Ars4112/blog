@@ -68,33 +68,27 @@ const ButtonCloseMenu = styled(Button)`
 
 const InputSearch = styled.input`
 	position: absolute;
-	border: 1px solid #000000;
-	width: 200px;
-	height: 20px;
-	top: 50%;
+	border: none;
+	border-radius: 20px;
+	box-shadow: 0 1px 9px rgba(0, 0, 0, 0.5);
+	padding: 8px;
+	width: ${({ isSearchOpen }) => (isSearchOpen ? "200px" : "0")};
+	top: ${({ isSearchOpen }) => (isSearchOpen ? "50%" : "-100%")};
 	transform: translateY(-50%);
-	right: 0;
+	right: 50px;
 	margin: 0;
 	transition: width 0.5s;
-
-	/* ${({ isSearchOpen }) =>
-		!isSearchOpen &&
-		css`
-			position: absolute;
-			width: 1px;
-			height: 1px;
-			margin: -1px;
-			padding: 0;
-			overflow: hidden;
-			border: 0;
-			transition: width 0.5s;
-		`} */
 `;
 
 function Logo(props) {
-	const { setMenuIsOpen, menuIsOpen, modalActive, searchInputValue, changeSearchHandler } = useContext(HeaderContext);
+	const { setMenuIsOpen, menuIsOpen, modalActive, searchInputValue,setSearchInputValue, changeSearchHandler } = useContext(HeaderContext);
 
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+	const searchButtonHandler = ()=> {
+		setIsSearchOpen(!isSearchOpen)
+		setSearchInputValue("")
+	}
 
 	return (
 		<LogoWrapper logoMenu={props.logoMenu}>
@@ -109,20 +103,20 @@ function Logo(props) {
 			{!menuIsOpen || !props.logoMenu ? (
 				<Button
 					right={true}
-					onClick={() => setIsSearchOpen(!isSearchOpen)}
+					onClick={searchButtonHandler}
 					tabIndex={menuIsOpen || modalActive ? -1 : 0}
 				>
 					<img src={search} alt="Поиск" />
 				</Button>
 			) : (
-				<ButtonCloseMenu right={true} onClick={() => setMenuIsOpen(false)}>
+				<ButtonCloseMenu right={true} onClick={() => setMenuIsOpen(false)} tabIndex={menuIsOpen || modalActive ? -1 : 0}>
 					<img src={close} alt="Закрыть" />
 				</ButtonCloseMenu>
 			)}
 
 			<InputSearch
 				isSearchOpen={isSearchOpen}
-				tabIndex={menuIsOpen || modalActive ? -1 : 0}
+				tabIndex={menuIsOpen || modalActive || !isSearchOpen ? -1 : 0}
 				onChange={(e) => changeSearchHandler(e)}
 				value={searchInputValue}
 			/>
