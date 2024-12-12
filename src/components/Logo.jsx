@@ -71,14 +71,14 @@ const InputSearch = styled.input`
 	border: none;
 	border-radius: 20px;
 	box-shadow: 0 1px 9px rgba(0, 0, 0, 0.5);
-	padding: ${({ isSearchOpen }) => (isSearchOpen ? "8px" : "0")};
+	padding: 8px;
+	opacity: ${({ isSearchOpen }) => (isSearchOpen ? "1" : "0")};
 	width: ${({ isSearchOpen }) => (isSearchOpen ? "200px" : "0")};
 	top: ${({ isSearchOpen }) => (isSearchOpen ? "50%" : "-100%")};
 	transform: translateY(-50%);
 	right: 50px;
 	margin: 0;
-	/* transition: width 0.5s, top 0s 0.5s; */
-	transition: ${({ isSearchOpen }) => (isSearchOpen ? "width 0.5s" : "width 0.5s, top 0s 0.5s, padding 0s 0.35s")};
+	transition: ${({ isSearchOpen }) => (isSearchOpen ? "width 0.5s" : "width 0.5s, top 0s 0.5s, opacity 0s 0.3s")};
 `;
 
 function Logo(props) {
