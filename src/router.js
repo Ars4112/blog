@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import { Error404 } from "./components/Error404";
 import App from "./App";
 import Modal from "./components/Modal";
